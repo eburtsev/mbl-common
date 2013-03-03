@@ -33,7 +33,7 @@ else
 fi
 echo Info: Deploying a debootstrap package...
 wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstrapPkgName
-dpkg -i /tmp/$deboostrapPkgName
+dpkg -i /tmp/$debootstrapPkgName
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
 echo Info: Preparing a new Debian Testing chroot filebase. Please, be patient.
