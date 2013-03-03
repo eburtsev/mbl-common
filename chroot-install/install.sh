@@ -3,7 +3,7 @@
 chrootBaseDir=/DataVolume/debian
 
 echo Info: This script will guide you through the chroot-based services
-echo Info: installation on WD My Book Live (Duo) NAS.
+echo Info: installation on WD My Book Live \(Duo\) NAS.
 echo Info: The goal is to install transmission bittorrent client and
 echo Info: MiniDLNA UPnP/DLNA server with no interference with firmware.
 echo
