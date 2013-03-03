@@ -27,7 +27,7 @@ then
 		rm -fr $chrootBaseDir.old
 	fi
 	mkdir $chrootBaseDir.old
-	mv -fr $chrootBaseDir/* $chrootBaseDir.old
+	mv -f $chrootBaseDir/* $chrootBaseDir.old
 else
 	mkdir $chrootBaseDir
 fi
