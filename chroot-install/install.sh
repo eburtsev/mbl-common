@@ -1,7 +1,7 @@
 #!/bin/sh
 
 chrootBaseDir=/DataVolume/debian
-
+deboostrapPkgName=debootstrap_1.0.10lenny1_all.deb
 echo Info: This script will guide you through the chroot-based services
 echo Info: installation on WD My Book Live \(Duo\) NAS.
 echo Info: The goal is to install transmission bittorrent client and
@@ -32,9 +32,9 @@ else
 	mkdir $chrootBaseDir
 fi
 echo Info: Deploying a debootstrap package...
-cd /tmp
-wget http://mbl-common.googlecode.com/svn/chroot-install/debootstrap_1.0.10lenny1_all.deb
-dpkg -i ./debootstrap_1.0.10lenny1_all.deb
+wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstraPkgName
+dpkg -i /tmp/$deboostrapPkgName
+rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
 echo Info: Preparing a new Debian Testing chroot filebase. Please, be patient.
 echo Info: May takes a long time on low speed internet connection...
@@ -46,7 +46,7 @@ sed -i 's|\\/var\\/lib\\/transmission-daemon\\/down3loads|/mnt/Public|g' $chroot
 sed -i 's|\"rpc-authentication-required\": 1,|\"rpc-authentication-required\": 0,|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 sed -i 's|^media_dir=/var/lib/minidlna|media_dir=/mnt/MediaServer|g' $chrootBaseDir/etc/minidlna.conf
 echo Info: ...finished. Now deploying services start script...
-wget -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
+wget -q  -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
 chmod a+x $chrootBaseDir/wedro_chroot.sh
 $chrootBaseDir/wedro_chroot.sh install
 echo minidlna > $chrootBaseDir/chroot-services.list
