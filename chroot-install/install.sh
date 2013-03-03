@@ -40,9 +40,9 @@ echo Info: Preparing a new Debian Testing chroot filebase. Please, be patient.
 echo Info: May takes a long time on low speed internet connection...
 debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude,locales,minidlna,transmission-daemon testing $chrootBaseDir ftp://ftp.debian.org/debian
 echo Info: ...finished. Now fixing minidlna and transmission config files:
-echo Info: * torrent content will be downloaded to \"Public\" share,
-echo Info: * UPnP/DLNA content will be taken from \"MediaServer\" share.
-sed -i 's|\/var\/lib\/transmission-daemon\/downloads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
+echo Info: \* torrent content will be downloaded to \"Public\" share,
+echo Info: \* UPnP/DLNA content will be taken from \"MediaServer\" share.
+sed -i 's|\\/var\\/lib\\/transmission-daemon\\/down3loads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 sed -i 's|\"rpc-authentication-required\": 1,|\"rpc-authentication-required\": 0,|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 sed -i 's|^media_dir=/var/lib/minidlna|media_dir=/mnt/MediaServer|g' $chrootBaseDir/etc/minidlna.conf
 echo Info: ...finished. Now deploying services start script...
