@@ -16,7 +16,7 @@ debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
 echo -e $INFO This script will guide you through the chroot-based services
 echo -e $INFO installation on WD My Book Live \(Duo\) NAS.
 echo -e $INFO The goal is to install transmission bittorrent client and
-echo -e $INFO MiniDLNA UPnP/DLNA server with no interference with firmware.
+echo -e $INFO MiniDLNA UPnP/DLNA server with no interference to firmware.
 echo -e $INFO You will be asked later about services you like to install.
 echo -en $INPUT Do you wish to continue [y/n]?
 read userAnswer
@@ -66,10 +66,12 @@ read userAnswer
 if [ "$userAnswer" == "y" ]
 then
 	echo -e $INFO UPnP/DLNA content will be taken from \"MediaServer\" share. Installing...
-	chroot $chrootBaseDir apt-get -qy install minidlna
-	chroot $chrootBaseDir /etc/init.d/minidlna stop
+	chroot $chrootBaseDir apt-get -qqy install minidlna
+	chroot $chrootBaseDir /etc/init.d/minidlna stop > /dev/null 2>&1
+	chroot $chrootBaseDir /etc/init.d/minissdpd stop > /dev/null 2>&1
 	sed -i 's|^media_dir=/var/lib/minidlna|media_dir=/mnt/MediaServer|g' $chrootBaseDir/etc/minidlna.conf
 	echo minidlna >> $chrootBaseDir/chroot-services.list
+	rm -f $chrootBaseDir/var/lib/minidlna/files.db
 	echo -e $INFO Minidlna is installed.
 fi
 
@@ -78,10 +80,11 @@ read userAnswer
 if [ "$userAnswer" == "y" ]
 then
 	echo -e $INFO Torrents content will be downloaded to \"Public\" share. Installing...
-	chroot $chrootBaseDir apt-get -qy install transmission-daemon
-	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop
+	chroot $chrootBaseDir apt-get -qqy install transmission-daemon
+	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop > /dev/null 2>&1
 	sed -i 's|\\/var\\/lib\\/transmission-daemon\\/downloads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 	sed -i 's|\"rpc-authentication-required\": 1,|\"rpc-authentication-required\": 0,|g' $chrootBaseDir/etc/transmission-daemon/settings.json
+	sed -i 's|\"rpc-whitelist\": "127.0.0.1\"|\"rpc-whitelist-enabled\": false|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 	echo transmission-daemon >> $chrootBaseDir/chroot-services.list
 	echo -e $INFO Transmission is installed.
 fi
