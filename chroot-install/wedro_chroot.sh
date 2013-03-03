@@ -6,8 +6,8 @@ SCRIPT_STOP='01'
 
 MOUNT_DIR='/DataVolume/shares'
 
-CHROOT_DIR="/srv/chroot"
-CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
+CHROOT_DIR="/DataVolume/debian"
+CHROOT_SERVICES="$(cat /DataVolume/debian/chroot-services.list)"
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
@@ -61,10 +61,9 @@ check_stopped() {
 #######################################################################
 
 start() {
-    check_started
+#    check_started
 
     mount --bind $MOUNT_DIR $CHROOT_DIR/mnt
-    mount --bind /opt $CHROOT_DIR/opt
 
     chroot $CHROOT_DIR mount -t proc none /proc -o rw,noexec,nosuid,nodev
     chroot $CHROOT_DIR mount -t sysfs none /sys -o rw,noexec,nosuid,nodev
@@ -76,7 +75,7 @@ start() {
 }
 
 stop() {
-    check_stopped
+#    check_stopped
 
     for ITEM in $CHROOT_SERVICES; do
         chroot $CHROOT_DIR service $ITEM stop
@@ -86,7 +85,6 @@ stop() {
     chroot $CHROOT_DIR umount /sys
     chroot $CHROOT_DIR umount /proc
 
-    umount $CHROOT_DIR/opt
     umount $CHROOT_DIR/mnt
 }
 
