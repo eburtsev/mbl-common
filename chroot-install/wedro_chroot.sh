@@ -7,7 +7,7 @@ SCRIPT_STOP='01'
 MOUNT_DIR='/DataVolume/shares'
 
 CHROOT_DIR="__CHROOT_DIR_PLACEHOLDER__"
-CHROOT_SERVICES="$(cat __CHROOT_DIR_PLACEHOLDER/chroot-services.list)"
+CHROOT_SERVICES="$(cat __CHROOT_DIR_PLACEHOLDER__/chroot-services.list)"
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME

@@ -1,10 +1,10 @@
 #!/bin/sh
 
-BOLD="\033[1m"
+BOLD="\033[1;33m"
 NORM="\033[0m"
 INFO="$BOLD Info:$NORM"
-ERROR="$BOLD *** Error:$NORM"
-WARNING="$BOLD * Warning:$NORM"
+ERROR="$BOLD Error:$NORM"
+WARNING="$BOLD Warning:$NORM"
 INPUT="$BOLD => $NORM"
 if [ -z $1 ]
 then
@@ -65,29 +65,29 @@ echo -en $INPUT Do you wish to install minidlna UPnP/DLNA server [y/n]?
 read userAnswer
 if [ "$userAnswer" == "y" ]
 then
-	echo -e $INFO UPnP/DLNA content will be taken from \"MediaServer\" share.
-	chroot $chrootBaseDir apt-get install minidlna > /dev/null 2>&1
-	chroot $chrootBaseDir /etc/init.d/minidlna stop > /dev/null 2>&1
+	echo -e $INFO UPnP/DLNA content will be taken from \"MediaServer\" share. Installing...
+	chroot $chrootBaseDir apt-get install minidlna
+	chroot $chrootBaseDir /etc/init.d/minidlna stop
 	sed -i 's|^media_dir=/var/lib/minidlna|media_dir=/mnt/MediaServer|g' $chrootBaseDir/etc/minidlna.conf
 	echo minidlna >> $chrootBaseDir/chroot-services.list
 	echo -e $INFO Minidlna is installed.
 fi
 
-echo -en $INPUT Do you wish to install tranmission BitTorrent client [y/n]?
+echo -en $INPUT Do you wish to install transmission BitTorrent client [y/n]?
 read userAnswer
 if [ "$userAnswer" == "y" ]
 then
-	echo -e $INFO Torrents content will be downloaded to \"Public\" share,
-	chroot $chrootBaseDir apt-get install transmission-daemon > /dev/null 2>&1
-	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop > /dev/null 2>&1
+	echo -e $INFO Torrents content will be downloaded to \"Public\" share. Installing...
+	chroot $chrootBaseDir apt-get install transmission-daemon
+	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop
 	sed -i 's|\\/var\\/lib\\/transmission-daemon\\/down3loads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
 	sed -i 's|\"rpc-authentication-required\": 1,|\"rpc-authentication-required\": 0,|g' $chrootBaseDir/etc/transmission-daemon/settings.json
-	echo transmission-daemon > $chrootBaseDir/chroot-services.list
+	echo transmission-daemon >> $chrootBaseDir/chroot-services.list
 	echo -e $INFO Transmission is installed.
 fi
 
 echo -e $INFO Now deploying services start script...
-wget -q  -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
+wget -q -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
 sed -i 's|__CHROOT_DIR_PLACEHOLDER__|$chrootBaseDir|g' $chrootBaseDir/wedro_chroot.sh
 chmod +x $chrootBaseDir/wedro_chroot.sh
 $chrootBaseDir/wedro_chroot.sh install
@@ -99,4 +99,5 @@ then
 	/etc/init.d/wedro_chroot.sh start
 fi
 
+echo -e $INFO Congratulation! Installation finished.
 echo -e $INFO Found bug? Please, report to http://code.google.com/p/mbl-common/issues/list
