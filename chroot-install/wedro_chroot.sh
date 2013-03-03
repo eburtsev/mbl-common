@@ -6,8 +6,8 @@ SCRIPT_STOP='01'
 
 MOUNT_DIR='/DataVolume/shares'
 
-CHROOT_DIR="/DataVolume/debian"
-CHROOT_SERVICES="$(cat /DataVolume/debian/chroot-services.list)"
+CHROOT_DIR="__CHROOT_DIR_PLACEHOLDER__"
+CHROOT_SERVICES="$(cat __CHROOT_DIR_PLACEHOLDER/chroot-services.list)"
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
