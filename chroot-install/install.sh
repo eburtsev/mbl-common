@@ -22,7 +22,7 @@ then
 	then
 		if [ -e /etc/init.d/wedro_chroot.sh ]
 		then
-			/etc/init.d/wedro_chroot.sh stop
+			/etc/init.d/wedro_chroot.sh stop > /dev/null 2>&1
 		fi
 		rm -fr $chrootBaseDir.old
 	fi
@@ -33,7 +33,7 @@ else
 fi
 echo Info: Deploying a debootstrap package...
 wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstrapPkgName
-dpkg -i /tmp/$debootstrapPkgName
+dpkg -i /tmp/$debootstrapPkgName > /dev/null 2>&1
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
 echo Info: Preparing a new Debian Testing chroot filebase. Please, be patient.
