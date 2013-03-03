@@ -1,7 +1,7 @@
 #!/bin/sh
 
 chrootBaseDir=/DataVolume/debian
-deboostrapPkgName=debootstrap_1.0.10lenny1_all.deb
+debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
 echo Info: This script will guide you through the chroot-based services
 echo Info: installation on WD My Book Live \(Duo\) NAS.
 echo Info: The goal is to install transmission bittorrent client and
@@ -32,7 +32,7 @@ else
 	mkdir $chrootBaseDir
 fi
 echo Info: Deploying a debootstrap package...
-wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstraPkgName
+wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstrapPkgName
 dpkg -i /tmp/$deboostrapPkgName
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
