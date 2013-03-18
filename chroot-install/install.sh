@@ -10,14 +10,13 @@ if [ -z $1 ]
 then
 	chrootBaseDir=/DataVolume/debian
 else
-	chrootBaseDir=$1
+	chrootBaseDir=/Datavolume/$1
 fi
 debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
 echo -e $INFO This script will guide you through the chroot-based services
 echo -e $INFO installation on WD My Book Live \(Duo\) NAS.
-echo -e $INFO The goal is to install transmission bittorrent client and
-echo -e $INFO MiniDLNA UPnP/DLNA server with no interference to firmware.
-echo -e $INFO You will be asked later about services you like to install.
+echo -e $INFO The goal is to install Debian Testing environment with no interference
+echo -e $INFO with firmware. You will be asked later about services you wish to install
 echo -en $INPUT Do you wish to continue [y/n]?
 read userAnswer
 if [ "$userAnswer" != "y" ]
@@ -33,19 +32,7 @@ fi
 if [ -d $chrootBaseDir ]
 then
 	echo -e $WARNING Previous installation detected, will be moved to $chrootBaseDir.old
-	if [ -e /etc/init.d/wedro_chroot.sh ]
-	then
-		/etc/init.d/wedro_chroot.sh stop > /dev/null 2>&1
-	fi
-	if [ -d $chrootBaseDir.old ]
-	then
-		if [ -e /etc/init.d/wedro_chroot.sh ]
-		then
-			/etc/init.d/wedro_chroot.sh stop > /dev/null 2>&1
-		fi
-		rm -fr $chrootBaseDir.old
-	fi
-	mkdir $chrootBaseDir.old
+	[ -d $chrootBaseDir.old ] || mkdir $chrootBaseDir.old
 	mv -f $chrootBaseDir/* $chrootBaseDir.old
 else
 	mkdir $chrootBaseDir
