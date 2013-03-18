@@ -1,13 +1,13 @@
 #!/bin/sh
 
-SCRIPT_NAME='wedro_chroot.sh'
+SCRIPT_NAME=$(basename $0)
 SCRIPT_START='99'
 SCRIPT_STOP='01'
 
 MOUNT_DIR='/DataVolume/shares'
 
 CHROOT_DIR="__CHROOT_DIR_PLACEHOLDER__"
-CHROOT_SERVICES="$(cat __CHROOT_DIR_PLACEHOLDER__/chroot-services.list)"
+CHROOT_SERVICES="$(cat $CHROOT_DIR/chroot-services.list)"
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
@@ -35,7 +35,7 @@ MOUNT_COUNTS="$(mount | grep $CHROOT_DIR | wc -l)"
 
 check_mounted() {
   if [[ $MOUNT_COUNTS -lt 1 ]]; then
-      echo "CHROOT sems unmounted. exiting"
+      echo "CHROOT seems to be unmounted, exiting..."
       exit 1
   fi
 }
@@ -45,7 +45,7 @@ CHROOT_COUNTS="$(chroot $CHROOT_DIR mount | wc -l)"
 check_started() {
   check_mounted
   if [[ $CHROOT_COUNTS -gt 0 ]]; then
-      echo "CHROOT sems started. exiting"
+      echo "CHROOT seems to be started, exiting..."
       exit 1
   fi
 }
@@ -53,7 +53,7 @@ check_started() {
 check_stopped() {
   check_mounted
   if [[ $CHROOT_COUNTS -eq 0 ]]; then
-      echo "CHROOT sems stopped. exiting"
+      echo "CHROOT seems to be stopped, exiting..."
       exit 1
   fi
 }
