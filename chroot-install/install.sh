@@ -14,6 +14,7 @@ else
 fi
 chrootBaseDir=/DataVolume/$chrootDir
 debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
+projectURL=http://mbl-common.googlecode.com/svn/chroot-install
 isServicesInstalled=no
 
 echo -e $INFO This script will guide you through the chroot-based services
@@ -45,7 +46,7 @@ else
 	mkdir $chrootBaseDir
 fi
 echo -e $INFO Deploying a debootstrap package...
-wget -q -O /tmp/$debootstrapPkgName http://mbl-common.googlecode.com/svn/chroot-install/$debootstrapPkgName
+wget -q -O /tmp/$debootstrapPkgName $projectURL/$debootstrapPkgName
 dpkg -i /tmp/$debootstrapPkgName > /dev/null 2>&1
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
@@ -55,7 +56,7 @@ debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude t
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
 echo -e $INFO A Debian Testing chroot environment  installed.
 echo -e $INFO Now deploying services start script...
-wget -q -O $chrootBaseDir/chroot_$chrootDir.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
+wget -q -O $chrootBaseDir/chroot_$chrootDir.sh $projectURL/wedro_chroot.sh
 eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroot_$chrootDir.sh
 chmod +x $chrootBaseDir/chroot_$chrootDir.sh
 $chrootBaseDir/chroot_$chrootDir.sh install
@@ -87,9 +88,8 @@ then
 	echo -e $INFO Torrents content will be downloaded to \"Public/Torrents\" share. Installing...
 	chroot $chrootBaseDir apt-get -qqy install transmission-daemon
 	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop > /dev/null 2>&1
-	sed -i 's|\\/var\\/lib\\/transmission-daemon\\/downloads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
-	sed -i 's|\"rpc-authentication-required\": 1,|\"rpc-authentication-required\": 0,|g' $chrootBaseDir/etc/transmission-daemon/settings.json
-	sed -i 's|\"rpc-whitelist\": "127.0.0.1\"|\"rpc-whitelist-enabled\": false|g' $chrootBaseDir/etc/transmission-daemon/settings.json
+	wget -q -O $chrootBaseDir/etc/transmission-daemon/settings.json $projectURL/settings.json
+	chmod +rw $chrootBaseDir/etc/transmission-daemon/settings.json
 	echo transmission-daemon >> $chrootBaseDir/chroot-services.list
 	echo -e $INFO Transmission is installed.
 fi
