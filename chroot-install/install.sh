@@ -13,6 +13,8 @@ else
 	chrootBaseDir=/Datavolume/$1
 fi
 debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
+isServicesInstalled=no
+
 echo -e $INFO This script will guide you through the chroot-based services
 echo -e $INFO installation on WD My Book Live \(Duo\) NAS.
 echo -e $INFO The goal is to install Debian Testing environment with no interference
@@ -27,6 +29,7 @@ fi
 
 if [ -e /etc/init.d/wedro_chroot.sh ]
 then
+	echo -e $WARNING Chroot\'ed services start/stop script detected. Trying to stop services...
 	/etc/init.d/wedro_chroot.sh stop > /dev/null 2>&1
 fi
 if [ -d $chrootBaseDir ]
@@ -43,16 +46,25 @@ dpkg -i /tmp/$debootstrapPkgName > /dev/null 2>&1
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
 echo -e $INFO Preparing a new Debian Testing chroot file base. Please, be patient,
-echo -e $INFO may takes a long time on low speed connection \(about 10 minutes on 30Mbps\)...
+echo -e $INFO may takes a long time on low speed connection \(about 20 minutes on 30Mbps\)...
 debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $chrootBaseDir ftp://ftp.debian.org/debian
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
-echo -e $INFO A Debian Testing chroot file base installed. Let\'s choose desired services.
+echo -e $INFO A Debian Testing chroot environment  installed.
+echo -e $INFO Now deploying services start script...
+wget -q -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
+eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/wedro_chroot.sh
+chmod +x $chrootBaseDir/wedro_chroot.sh
+$chrootBaseDir/wedro_chroot.sh install
+touch $chrootBaseDir/chroot-services.list
+echo -e $INFO ...finished.
 
 echo -en $INPUT Do you wish to install minidlna UPnP/DLNA server [y/n]?
 read userAnswer
 if [ "$userAnswer" == "y" ]
 then
-	echo -e $INFO UPnP/DLNA content will be taken from \"MediaServer\" share. Installing...
+	isServicesInstalled=yes
+	[ -d /DataVolume/shares/Public/MediaServer ] || mkdir /DataVolume/shares/Public/MediaServer
+	echo -e $INFO UPnP/DLNA content will be taken from \"Public/MediaServer\" share. Installing...
 	chroot $chrootBaseDir apt-get -qqy install minidlna
 	chroot $chrootBaseDir /etc/init.d/minidlna stop > /dev/null 2>&1
 	chroot $chrootBaseDir /etc/init.d/minissdpd stop > /dev/null 2>&1
@@ -66,7 +78,9 @@ echo -en $INPUT Do you wish to install transmission BitTorrent client [y/n]?
 read userAnswer
 if [ "$userAnswer" == "y" ]
 then
-	echo -e $INFO Torrents content will be downloaded to \"Public\" share. Installing...
+	isServicesInstalled=yes
+	[ -d /DataVolume/shares/Public/Torrents ] || mkdir /DataVolume/shares/Public/Torrents
+	echo -e $INFO Torrents content will be downloaded to \"Public/Torrents\" share. Installing...
 	chroot $chrootBaseDir apt-get -qqy install transmission-daemon
 	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop > /dev/null 2>&1
 	sed -i 's|\\/var\\/lib\\/transmission-daemon\\/downloads|/mnt/Public|g' $chrootBaseDir/etc/transmission-daemon/settings.json
@@ -76,17 +90,18 @@ then
 	echo -e $INFO Transmission is installed.
 fi
 
-echo -e $INFO Now deploying services start script...
-wget -q -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
-eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/wedro_chroot.sh
-chmod +x $chrootBaseDir/wedro_chroot.sh
-$chrootBaseDir/wedro_chroot.sh install
-echo -e $INFO ...finished.
-echo -en $INPUT Do you wish to start chroot\'ed services right now [y/n]?
-read userAnswer
-if [ "$userAnswer" == "y" ]
+if [ "$isServicesInstalled" == "yes" ]
 then
-	/etc/init.d/wedro_chroot.sh start
+	echo -en $INPUT Do you wish to start chroot\'ed services right now [y/n]?
+	read userAnswer
+	if [ "$userAnswer" == "y" ]
+	then
+		/etc/init.d/wedro_chroot.sh start
+	fi
+else
+	echo -e $INFO Ok, you\'ve working Debian Testing onboard. You may install any services
+	echo -e $INFO you wish, but dont forget to add it\'s names to
+	echo -e $INFO $chrootBaseDir/chroot-services.list
 fi
 
 echo -e $INFO Congratulation! Installation finished.
