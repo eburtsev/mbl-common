@@ -8,33 +8,37 @@ WARNING="$BOLD Warning:$NORM"
 INPUT="$BOLD => $NORM"
 if [ -z $1 ]
 then
-	chrootBaseDir=/DataVolume/debian
+	chrootDir=debian
 else
-	chrootBaseDir=/Datavolume/$1
+	chrootDir=$1
 fi
+chrootBaseDir=/DataVolume/$chrootDir
 debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
 isServicesInstalled=no
 
 echo -e $INFO This script will guide you through the chroot-based services
-echo -e $INFO installation on WD My Book Live \(Duo\) NAS.
+echo -e $INFO installation on Western Digital My Book Live \(Duo\) NAS.
 echo -e $INFO The goal is to install Debian Testing environment with no interference
-echo -e $INFO with firmware. You will be asked later about services you wish to install
+echo -e $INFO with firmware. You will be asked later about which services to install
 echo -en $INPUT Do you wish to continue [y/n]?
 read userAnswer
 if [ "$userAnswer" != "y" ]
 then
-	echo -e $INFO Exiting.
+	echo -e $INFO Ok then. Exiting.
 	exit 0
 fi
 
-if [ -e /etc/init.d/wedro_chroot.sh ]
+if [ -e /etc/init.d/chroot_$chroot.sh ]
 then
-	echo -e $WARNING Chroot\'ed services start/stop script detected. Trying to stop services...
-	/etc/init.d/wedro_chroot.sh stop > /dev/null 2>&1
+	echo -e $ERROR Chroot\'ed services start/stop script detected! Please, remove
+	echo -e $ERROR previous installation or specify destination folder name
+	echo -e $ERROR and run script again with <foldername> parameter, for example:
+	echo -e $ERROR ./install.sh my_debian
+	exit 1
 fi
 if [ -d $chrootBaseDir ]
 then
-	echo -e $WARNING Previous installation detected, will be moved to $chrootBaseDir.old
+	echo -e $WARNING Previous chroot environment will be moved to $chrootBaseDir.old
 	[ -d $chrootBaseDir.old ] || mkdir $chrootBaseDir.old
 	mv -f $chrootBaseDir/* $chrootBaseDir.old
 else
@@ -51,10 +55,10 @@ debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude t
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
 echo -e $INFO A Debian Testing chroot environment  installed.
 echo -e $INFO Now deploying services start script...
-wget -q -O $chrootBaseDir/wedro_chroot.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
-eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/wedro_chroot.sh
-chmod +x $chrootBaseDir/wedro_chroot.sh
-$chrootBaseDir/wedro_chroot.sh install
+wget -q -O $chrootBaseDir/chroot_$chrootDir.sh http://mbl-common.googlecode.com/svn/chroot-install/wedro_chroot.sh
+eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroot_$chrootDir.sh
+chmod +x $chrootBaseDir/chroot_$chrootDir.sh
+$chrootBaseDir/chroot_$chrootDir.sh install
 touch $chrootBaseDir/chroot-services.list
 echo -e $INFO ...finished.
 
@@ -96,13 +100,13 @@ then
 	read userAnswer
 	if [ "$userAnswer" == "y" ]
 	then
-		/etc/init.d/wedro_chroot.sh start
+		/etc/init.d/chroot_$chrootDir.sh start
 	fi
-else
-	echo -e $INFO Ok, you\'ve working Debian Testing onboard. You may install any services
-	echo -e $INFO you wish, but dont forget to add it\'s names to
-	echo -e $INFO $chrootBaseDir/chroot-services.list
 fi
-
-echo -e $INFO Congratulation! Installation finished.
+echo -e $INFO Congratulation! Installation finished. You\'ve got a working
+echo -e $INFO Debian Testing environment onboard.  You may install any services
+echo -e $INFO you wish, but don\'t forget to add it\'s names to
+echo -e $INFO $chrootBaseDir/chroot-services.list
+echo -e $INFO /etc/init.d/chroot_$chrootDir.sh script is used
+echo -e $INFO to start or stop chroot\'ed services.
 echo -e $INFO Found bug? Please, report to http://code.google.com/p/mbl-common/issues/list
