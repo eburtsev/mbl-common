@@ -16,7 +16,7 @@ chrootBaseDir=/DataVolume/$chrootDir
 debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
 projectURL=http://mbl-common.googlecode.com/svn/chroot-install
 isServicesInstalled=no
-
+wget -q -O - http://mbl-common.googlecode.com/files/downloadcounter.txt > /dev/null 2>&1
 echo -e $INFO This script will guide you through the chroot-based services
 echo -e $INFO installation on Western Digital My Book Live \(Duo\) NAS.
 echo -e $INFO The goal is to install Debian Testing environment with no interference
