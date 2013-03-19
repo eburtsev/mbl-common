@@ -51,7 +51,7 @@ dpkg -i /tmp/$debootstrapPkgName > /dev/null 2>&1
 rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
 echo -e $INFO Preparing a new Debian Testing chroot file base. Please, be patient,
-echo -e $INFO may takes a long time on low speed connection \(about 20 minutes on 30Mbps\)...
+echo -e $INFO may takes a long time on low speed connection...
 debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $chrootBaseDir ftp://ftp.debian.org/debian
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
 echo -e $INFO A Debian Testing chroot environment  installed.
@@ -109,4 +109,5 @@ echo -e $INFO you wish, but don\'t forget to add it\'s names to
 echo -e $INFO $chrootBaseDir/chroot-services.list
 echo -e $INFO /etc/init.d/chroot_$chrootDir.sh script is used
 echo -e $INFO to start or stop chroot\'ed services.
-echo -e $INFO Found bug? Please, report to http://code.google.com/p/mbl-common/issues/list
+echo -e $INFO Found bug? Please, report us!
+echo -e $INFO http://code.google.com/p/mbl-common/issues/list
