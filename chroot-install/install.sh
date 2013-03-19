@@ -70,7 +70,7 @@ then
 	isServicesInstalled=yes
 	[ -d /DataVolume/shares/Public/MediaServer ] || mkdir /DataVolume/shares/Public/MediaServer
 	echo -e $INFO UPnP/DLNA content will be taken from \"Public/MediaServer\" share. Installing...
-	chroot $chrootBaseDir apt-get -qqy install minidlna
+	chroot $chrootBaseDir apt-get --force-yes -qqy install minidlna
 	chroot $chrootBaseDir /etc/init.d/minidlna stop > /dev/null 2>&1
 	chroot $chrootBaseDir /etc/init.d/minissdpd stop > /dev/null 2>&1
 	sed -i 's|^media_dir=/var/lib/minidlna|media_dir=/mnt/MediaServer|g' $chrootBaseDir/etc/minidlna.conf
@@ -86,7 +86,7 @@ then
 	isServicesInstalled=yes
 	[ -d /DataVolume/shares/Public/Torrents ] || mkdir /DataVolume/shares/Public/Torrents
 	echo -e $INFO Torrents content will be downloaded to \"Public/Torrents\" share. Installing...
-	chroot $chrootBaseDir apt-get -qqy install transmission-daemon
+	chroot $chrootBaseDir apt-get --force-yes -qqy install transmission-daemon
 	chroot $chrootBaseDir /etc/init.d/transmission-daemon stop > /dev/null 2>&1
 	wget -q -O $chrootBaseDir/etc/transmission-daemon/settings.json $projectURL/settings.json
 	chmod +rw $chrootBaseDir/etc/transmission-daemon/settings.json
