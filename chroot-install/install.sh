@@ -59,8 +59,8 @@ echo -e $INFO Now deploying services start script...
 wget -q -O $chrootBaseDir/chroot_$chrootDir.sh $projectURL/wedro_chroot.sh
 eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroot_$chrootDir.sh
 chmod +x $chrootBaseDir/chroot_$chrootDir.sh
-$chrootBaseDir/chroot_$chrootDir.sh install
 touch $chrootBaseDir/chroot-services.list
+$chrootBaseDir/chroot_$chrootDir.sh install
 echo >> $chrootBaseDir/root/.bashrc
 echo PS1=\'\(chroot-$chrootDir\)\\w\# \' >> $chrootBaseDir/root/.bashrc
 echo -e $INFO ...finished.

@@ -96,7 +96,7 @@ case "$1" in
 #        stop
 #        sleep 1
         script_remove
-	echo Warning! A reboot is highly recommended to finish uninstallation!
+        echo Warning! A reboot is highly recommended to complete uninstallation!
     ;;
     *)
         echo $"Usage: $0 {start|stop|restart|install|init|remove}"
