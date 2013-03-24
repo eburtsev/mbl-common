@@ -61,6 +61,8 @@ eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroo
 chmod +x $chrootBaseDir/chroot_$chrootDir.sh
 $chrootBaseDir/chroot_$chrootDir.sh install
 touch $chrootBaseDir/chroot-services.list
+echo >> $chrootBaseDir/etc/profile
+echo PS1=\'\(chroot-$chrootDir\)\# \' >> $chrootBaseDir/etc/profile
 echo -e $INFO ...finished.
 
 echo -en $INPUT Do you wish to install miniDLNA UPnP/DLNA server [y/n]?
