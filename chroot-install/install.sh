@@ -61,8 +61,8 @@ eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroo
 chmod +x $chrootBaseDir/chroot_$chrootDir.sh
 $chrootBaseDir/chroot_$chrootDir.sh install
 touch $chrootBaseDir/chroot-services.list
-echo >> $chrootBaseDir/etc/profile
-echo PS1=\'\(chroot-$chrootDir\)\# \' >> $chrootBaseDir/etc/profile
+echo >> $chrootBaseDir/root/.bashrc
+echo PS1=\'\(chroot-$chrootDir\)\\w\# \' >> $chrootBaseDir/root/.bashrc
 echo -e $INFO ...finished.
 
 echo -en $INPUT Do you wish to install miniDLNA UPnP/DLNA server [y/n]?
@@ -70,17 +70,18 @@ read userAnswer
 if [ "$userAnswer" == "y" ]
 then
 	isServicesInstalled=yes
-	echo -e $INFO UPnP/DLNA content will be taken from \"Public/Shared Music\", \"Public/Shared Pictures\" and
-	echo -e $INFO \"Public/Shared Videos\" shares.
+	echo -e $INFO UPnP/DLNA content will be taken from \"Public/Shared Music\",
+	echo -e $INFO \"Public/Shared Pictures\" and\"Public/Shared Videos\" shares.
 	chroot $chrootBaseDir apt-get --force-yes -qqy install minidlna
 	chroot $chrootBaseDir /etc/init.d/minidlna stop > /dev/null 2>&1
 	chroot $chrootBaseDir /etc/init.d/minissdpd stop > /dev/null 2>&1
+	killall minidlna > /dev/null 2>&1
 	[ -d "/DataVolume/shares/Public/Shared Music" ] || mkdir "/DataVolume/shares/Public/Shared Music"
 	[ -d "/DataVolume/shares/Public/Shared Pictures" ] || mkdir "/DataVolume/shares/Public/Shared Pictures"
 	[ -d "/DataVolume/shares/Public/Shared Videos" ] || mkdir "/DataVolume/shares/Public/Shared Videos"
 	sed -i 's|^media_dir=/var/lib/minidlna|media_dir=A,/mnt/Public/Shared Music\nmedia_dir=P,/mnt/Public/Shared Pictures\nmedia_dir=V,/mnt/Public/Shared Videos|g' $chrootBaseDir/etc/minidlna.conf
-	echo minidlna >> $chrootBaseDir/chroot-services.list
 	rm -f $chrootBaseDir/var/lib/minidlna/files.db
+	echo minidlna >> $chrootBaseDir/chroot-services.list
 	echo -e $INFO Minidlna is installed.
 fi
 
