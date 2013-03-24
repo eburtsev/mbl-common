@@ -82,10 +82,10 @@ then
 	sed -i 's|^media_dir=/var/lib/minidlna|media_dir=A,/mnt/Public/Shared Music\nmedia_dir=P,/mnt/Public/Shared Pictures\nmedia_dir=V,/mnt/Public/Shared Videos|g' $chrootBaseDir/etc/minidlna.conf
 	rm -f $chrootBaseDir/var/lib/minidlna/files.db
 	echo minidlna >> $chrootBaseDir/chroot-services.list
-	echo -e $INFO Minidlna is installed.
+	echo -e $INFO MiniDLNA is installed.
 fi
 
-echo -en $INPUT Do you wish to install transmission BitTorrent client [y/n]?
+echo -en $INPUT Do you wish to install Transmission BitTorrent client [y/n]?
 read userAnswer
 if [ "$userAnswer" == "y" ]
 then
