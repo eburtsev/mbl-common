@@ -49,7 +49,8 @@ exit
 
 Остановите chroot сервисы и удалите скрипт их автозапуска
 {{{
-/DataVolume/debian/chroot_debian.sh remove
+/etc/init.d/chroot_debian.sh stop
+/etc/init.d/chroot_debian.sh remove
 }}}
 
 Перегрузите WD My Book Live и удалите все файлы Debian Testing
