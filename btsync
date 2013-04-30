@@ -15,7 +15,6 @@ STOP_TIMEOUT=30
 
 [ -x $DAEMON ] || exit 0
 HOMEDIR=`getent passwd $USER | cut -d: -f6`
-[ -f $HOMEDIR/btsync.conf ] || exit 0
 
 . /lib/lsb/init-functions
 
