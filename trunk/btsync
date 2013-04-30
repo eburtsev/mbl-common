@@ -15,6 +15,7 @@ STOP_TIMEOUT=30
 
 [ -x $DAEMON ] || exit 0
 HOMEDIR=`getent passwd $USER | cut -d: -f6`
+[ -f $HOMEDIR/btsync.conf ] || exit 0
 
 . /lib/lsb/init-functions
 
@@ -24,8 +25,8 @@ script_install() {
     update-rc.d $NAME defaults
     if [ ! -f $HOMEDIR/btsync.conf ]; then
 	$DAEMON --dump-sample-config > $HOMEDIR/btsync.conf
-	echo "Sample config generated at $HOMEDIR/btsync.conf"
-	echo "Please edit btsync.conf and restart script"
+	log_action_msg "Sample config generated at $HOMEDIR/btsync.conf"
+	log_action_msg "Please edit config and restart script"
     fi
 }
 
@@ -70,16 +71,12 @@ case "$1" in
     status)
 	status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
     ;;
-    init)
-	script_install
-	start
-    ;;
     remove)
 	stop
 	script_remove
     ;;
     *)
-	log_action_msg "Usage: /etc/init.d/$NAME {start|stop|restart|install|init|remove|status}" || true
+	log_action_msg "Usage: /etc/init.d/$NAME {start|stop|restart|install|remove|status}" || true
 	exit 2
 esac
 
