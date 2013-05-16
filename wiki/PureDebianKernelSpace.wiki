@@ -39,15 +39,14 @@ make 44x/bluestone_defconfig
 make menuconfig
 }}}
 
-Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хоть тень сомнения в виборе нужных пунктов, то распакуйте из любого [http://support.wdc.com/download/gpl/ GPL-комплекта] конфиг `packages/kernel_2.6.32-11/arch/powerpc/configs/44x/apollo_3G_nas_defconfig` и работайте с ним. Собираем ядро и Device tree binary:
+Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хоть тень сомнения в виборе нужных пунктов, то распакуйте из любого [http://support.wdc.com/download/gpl/ GPL-комплекта] конфиг `packages/kernel_2.6.32-11/arch/powerpc/configs/44x/apollo_3G_nas_defconfig` и работайте с ним. Собираем ядро:
 
 {{{
 make uImage
-make bluestone.dtb
 }}}
 
-Всё! Необходимо лишь перенести эти файлы в будущую систему в папку /boot.
+Всё! Необходимо лишь перенести три файла в будущую систему в папку /boot.
 
-  * скомпилированный `./arch/powerpc/boot/bluestone.dtb` в будущую систему под именем `/boot/apollo3g.dtb`
   * готовое ядро `./arch/powerpc/boot/uImage` в будущую систему под именем `/boot/uImage`
-  * имеющийся на MBL скрипт `/boot/boot.scr` в будущую систему под именем `/boot/boot.scr`
+  * имеющийся на MBL скрипт `/boot/boot.scr` в будущую систему в `/boot/boot.scr`
+  * имеющийся на MBL `/boot/apollo3g.dtb` в будущую систему в `/boot/apollo3g.dtb`
