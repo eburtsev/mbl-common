@@ -39,12 +39,14 @@ make 44x/bluestone_defconfig
 make menuconfig
 }}}
 
-Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хоть тень сомнения в виборе нужных пунктов, то распакуйте из любого [http://support.wdc.com/download/gpl/ GPL-комплекта] конфиг `packages/kernel_2.6.32-11/arch/powerpc/configs/44x/apollo_3G_nas_defconfig` и работайте с ним. Собираем ядро и Device tree binary::
+Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хоть тень сомнения в виборе нужных пунктов, то распакуйте из любого [http://support.wdc.com/download/gpl/ GPL-комплекта] конфиг `packages/kernel_2.6.32-11/arch/powerpc/configs/44x/apollo_3G_nas_defconfig` и работайте с ним. Собираем ядро и Device tree binary:
 
 {{{
 make uImage
 make bluestone.dtb
 }}}
+
+PS Если будете включать в конфиге модуль криптоакселерации, то вам понадобится [https://github.com/torvalds/linux/pull/33 мой фикс].
 
 Всё! Необходимо лишь перенести три файла в будущую систему в папку /boot.
 
