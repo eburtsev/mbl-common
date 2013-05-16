@@ -14,8 +14,8 @@ debootstrap --arch mipsel wheezy /DataVolume/debinst http://ftp.us.debian.org/de
 Далее можно «провалиться» в получившуюся среду и донастроить её:
 
 {{{
-mount -o bind /proc /DataVolume/debint/proc
-LANG=C.UTF-8 chroot /DataVolume/debint /bin/bash
+mount -o bind /proc /DataVolume/debinst/proc
+LANG=C.UTF-8 chroot /DataVolume/debinst /bin/bash
 }}}
 
 В частности, создать node'ы ключевых устройств:
@@ -30,15 +30,15 @@ MAKEDEV generic
 
 {{{
 exit
-mount -o bind /dev /DataVolume/debint/dev
-cp /etc/fstab /DataVolume/debint/etc/fstab
-cp /etc/network/interfaces /DataVolume/debint/etc/network/interfaces
-cp /etc/hostname /DataVolume/debint/etc/hostname
-cp /etc/hosts /DataVolume/debint/etc/hosts
-echo nameserver 8.8.8.8 > /DataVolume/debint/etc/resolv.conf
-echo deb http://security.debian.org/ wheezy/updates main >> /DataVolume/debint/etc/apt/sources.list
-echo deb-src http://security.debian.org/ wheezy/updates main >> /DataVolume/debint/etc/apt/sources.list
-chroot /DataVolume/debint
+mount -o bind /dev /DataVolume/debinst/dev
+cp /etc/fstab /DataVolume/debinst/etc/fstab
+cp /etc/network/interfaces /DataVolume/debinst/etc/network/interfaces
+cp /etc/hostname /DataVolume/debinst/etc/hostname
+cp /etc/hosts /DataVolume/debinst/etc/hosts
+echo nameserver 8.8.8.8 > /DataVolume/debinst/etc/resolv.conf
+echo deb http://security.debian.org/ wheezy/updates main >> /DataVolume/debinst/etc/apt/sources.list
+echo deb-src http://security.debian.org/ wheezy/updates main >> /DataVolume/debinst/etc/apt/sources.list
+chroot /DataVolume/debinst
 }}}
 
 Осталось подправить в будущей системе часовой пояс и выбрать правильную locale:
@@ -53,13 +53,13 @@ User-space часть готова. Осталось упаковать и пе�
 
 {{{
 exit
-umount /DataVolume/debint/dev
-umount /DataVolume/debint/proc
-cd /DataVolume/debint/dev
-tar -cvzf ../shares/Public/debints.tgz ./
+umount /DataVolume/debinst/dev
+umount /DataVolume/debinst/proc
+cd /DataVolume/debinst/dev
+tar -cvzf ../shares/Public/debinsts.tgz ./
 }}}
 
-На шаре Public будет лежать архив debints.tgz — user-space образ готовой системы.
+На шаре Public будет лежать архив debinst.tgz — user-space образ готовой системы.
 
 В случае нативной компиляции MBL можно не покидать и [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace собрать] на нём будущее ядро.
 
