@@ -1,0 +1,66 @@
+#Подготовка User Space.
+
+= Подготовка user space для Debian Wheezy =
+
+Выполняется на работающем MBL по [этому http://www.debian.org/releases/stable/i386/apds03.html.en] изюмительному мануалу. Устанавливаем debootstrap (клянусь, это — единственный пакет, который придётся ставить в хост систему. Учитывая, что он представляет собой лишь набор скриптов прошивке мы не навредим) и подготавливаем образ будущей системы:
+
+{{{
+wget http://mbl-common.googlecode.com/svn/chroot-install/debootstrap_1.0.10lenny1_all.deb
+dpkg -i ./debootstrap_1.0.10lenny1_all.deb
+ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/wheezy
+debootstrap --arch mipsel wheezy /DataVolume/debinst http://ftp.us.debian.org/debian
+}}}
+
+Далее можно «провалиться» в получившуюся среду и донастроить её:
+
+{{{
+mount -o bind /proc /DataVolume/debint/proc
+LANG=C.UTF-8 chroot /DataVolume/debint /bin/bash
+}}}
+
+В частности, создать node'ы ключевых устройств:
+
+{{{
+apt-get install makedev
+cd /dev
+MAKEDEV generic
+}}}
+
+Далее лучше пока воспользоваться деревом устройств хост системы и продолжить настройку с ними:
+
+{{{
+exit
+mount -o bind /dev /DataVolume/debint/dev
+cp /etc/fstab /DataVolume/debint/etc/fstab
+cp /etc/network/interfaces /DataVolume/debint/etc/network/interfaces
+cp /etc/hostname /DataVolume/debint/etc/hostname
+cp /etc/hosts /DataVolume/debint/etc/hosts
+echo nameserver 8.8.8.8 > /DataVolume/debint/etc/resolv.conf
+echo deb http://security.debian.org/ wheezy/updates main >> /DataVolume/debint/etc/apt/sources.list
+echo deb-src http://security.debian.org/ wheezy/updates main >> /DataVolume/debint/etc/apt/sources.list
+chroot /DataVolume/debint
+}}}
+
+Осталось подправить в будущей системе часовой пояс и выбрать правильную locale:
+
+{{{
+aptitude install locales
+dpkg-reconfigure locales
+dpkg-reconfigure tzdata
+}}}
+
+User-space часть готова. Осталось упаковать и перенести её на место назначения:
+
+{{{
+exit
+umount /DataVolume/debint/dev
+umount /DataVolume/debint/proc
+cd /DataVolume/debint/dev
+tar -cvzf ../shares/Public/debints.tgz ./
+}}}
+
+На шаре Public будет лежать архив debints.tgz — user-space образ готовой системы.
+
+В случае нативной компиляции MBL можно не покидать и [собрать http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace] на нём будущее ядро.
+
+После сборки user-space и kernel-space частей остаётся склеить их вместе для получения образа новой рабочей системы.
