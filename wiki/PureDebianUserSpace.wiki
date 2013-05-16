@@ -63,4 +63,4 @@ tar -cvzf ../shares/Public/debints.tgz ./
 
 В случае нативной компиляции MBL можно не покидать и [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace собрать] на нём будущее ядро.
 
-После сборки user-space и kernel-space частей остаётся склеить их вместе для получения образа новой рабочей системы.
+После сборки user-space и kernel-space частей остаётся [http://code.google.com/p/mbl-common/wiki/PureDebianPutTogether склеить] их вместе для получения образа новой рабочей системы.
