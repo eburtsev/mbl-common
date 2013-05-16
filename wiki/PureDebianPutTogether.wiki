@@ -16,7 +16,10 @@ mkdir /mnt/md0
 mount /dev/md0 /mnt/md0
 }}}
 
-`/mnt/md0` — это будущая корневая файловая система для нашего устройства. Распаковываем на неё user-space часть из [http://code.google.com/p/mbl-common/wiki/PureDebianUserSpace подготовленного] ранее  архива debints.tgz положить в папку /mnt/md0/boot три файла, отвечающие (упрощаем) за kernel-space часть, вы их тоже [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace подготовили] ранее: boot.scr, uImage и apollo3g.dtb.
+`/mnt/md0` — это будущая корневая файловая система для нашего устройства. Распаковываем на неё:
+
+  * user-space часть из [http://code.google.com/p/mbl-common/wiki/PureDebianUserSpace подготовленного] ранее  архива debints.tgz,
+  * в папку /mnt/md0/boot три файла, отвечающие (упрощаем) за kernel-space часть, вы их тоже [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace подготовили] ранее: boot.scr, uImage и apollo3g.dtb.
 
 Всё готово. Остаётся размонтировать /dev/md0:
 
