@@ -4,9 +4,9 @@
 
 Понадобится любой SATA-диск с объёмом более пяти гигабайт. На него будет установлен образ будущей системы Debian Wheezy, а сам диск после этих манипуляций заменит заводской, который в этот момент у вас подключен в MBL. Если у вас стальные яйца, то вы можете, конечно, сразу использовать диск от MBL, но с первой попытки у вас скорее всего ничего не выйдет, а откатываться будете не к чему.
 
-Все действия будут проводится на Linux ПК. Если у вас линукса на ПК нет, то скачайте [CD Ubuntu http://www.ubuntu.com/download/desktop] и установите его как Live-систему на флешку с помощью Universal [USB Installer http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/]. Для удобства можете сразу положить на флешку архивы с подготовленными на предыдущих шагах user-space и kernel-space-частями и скриптик debricker.sh. Инструкцию по разборке MBL и переразбивке диска можно найти [здесь http://tandp.subankulov.com/archives/462].
+Все действия будут проводится на Linux ПК. Если у вас линукса на ПК нет, то скачайте [http://www.ubuntu.com/download/desktop CD Ubuntu ] и установите его как Live-систему на флешку с помощью Universal [http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/ USB Installer]. Для удобства можете сразу положить на флешку архивы с подготовленными на предыдущих шагах user-space и kernel-space-частями и скриптик debricker.sh. Инструкцию по разборке MBL и переразбивке диска можно найти [http://tandp.subankulov.com/archives/462 здесь].
 
-На Linux ПК выполняем [процедуры http://tandp.subankulov.com/archives/462] по восстановлению образа диска, после которых диск будет иметь ровно такой же вид, как в MBL с завода. Далее необходимо смонтировать RAID1, который в будущем будет корневой файловой системой для Debian Wheezy на MBL. Я буду подразумевать, что мы работаем с диском /dev/sda.
+На Linux ПК выполняем [http://tandp.subankulov.com/archives/462 процедуры] по восстановлению образа диска, после которых диск будет иметь ровно такой же вид, как в MBL с завода. Далее необходимо смонтировать RAID1, который в будущем будет корневой файловой системой для Debian Wheezy на MBL. Я буду подразумевать, что мы работаем с диском /dev/sda.
 
 {{{
 mdadm --create /dev/md0 --verbose --metadata=0.9 --raid-devices=2 --level=raid1 --run /dev/sda1 missing
@@ -16,7 +16,7 @@ mkdir /mnt/md0
 mount /dev/md0 /mnt/md0
 }}}
 
-`/mnt/md0` — это будущая корневая файловая система для нашего устройства. Распаковываем на неё user-space часть из подготовленного [ранее http://code.google.com/p/mbl-common/wiki/PureDebianUserSpace] архива debints.tgz положить в папку /mnt/md0/boot три файла, отвечающие (упрощаем) за kernel-space часть, вы их тоже [подготовили https://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace] ранее: boot.scr, uImage и apollo3g.dtb.
+`/mnt/md0` — это будущая корневая файловая система для нашего устройства. Распаковываем на неё user-space часть из [http://code.google.com/p/mbl-common/wiki/PureDebianUserSpace подготовленного] ранее  архива debints.tgz положить в папку /mnt/md0/boot три файла, отвечающие (упрощаем) за kernel-space часть, вы их тоже [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace подготовили] ранее: boot.scr, uImage и apollo3g.dtb.
 
 Всё готово. Остаётся размонтировать /dev/md0:
 
@@ -25,7 +25,7 @@ umount /mnt/md0
 mdadm --stop /dev/md0
 }}}
 
-и выполнить "магию" по изменению big-endian на little-endian для сигнатур половинок будущего RAID1-массива. Для этого необходимо "выдрать" бинарник `swap` из скрипта debricker.sh или взять готовый [отсюда http://bijutiva.ru/wp-content/upload/wd/swap.zip].
+и выполнить "магию" по изменению big-endian на little-endian для сигнатур половинок будущего RAID1-массива. Для этого необходимо "выдрать" бинарник `swap` из скрипта debricker.sh или взять готовый [http://bijutiva.ru/wp-content/upload/wd/swap.zip отсюда].
 
 {{{
 ./swap /dev/sda1 
