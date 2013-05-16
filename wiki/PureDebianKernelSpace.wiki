@@ -35,11 +35,11 @@ tar -xvf ./linux-3.4.45.tar.xz
 cd ./linux-3.4.45
 make distclean
 make mrproper
-cp ./arch/powerpc/configs/44x/bluestone_defconfig ./.config
+make 44x/bluestone_defconfig
 make menuconfig
 }}}
 
-Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хотт тень сомнения, то распаковывайте на ПК GPL ядро, запускайте там menuconfig аналогичным образом и сравнивайте выбираемые пункты. Собираем ядро и Device tree binary:
+Дальше вы должны будете выбрать в `menuconfig` необходимые компоненты, например, подддержку RAID, файловых систем ext3, ext4 и прочих необходимых компонентов. Если есть хоть тень сомнения в виборе нужных пунктов, то распакуйте из любого [http://support.wdc.com/download/gpl/ GPL-комплекта] конфиг `packages/kernel_2.6.32-11/arch/powerpc/configs/44x/apollo_3G_nas_defconfig` и работайте с ним. Собираем ядро и Device tree binary:
 
 {{{
 make uImage
