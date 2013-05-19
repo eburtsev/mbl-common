@@ -11,6 +11,7 @@
 {{{
 mdadm --create /dev/md0 --verbose --metadata=0.9 --raid-devices=2 --level=raid1 --run /dev/sda1 missing
 mdadm /dev/md0 --add --verbose /dev/sda2
+mdadm --wait
 mkfs.ext3 -c -b 4096 /dev/md0
 mkdir /mnt/md0
 mount /dev/md0 /mnt/md0
