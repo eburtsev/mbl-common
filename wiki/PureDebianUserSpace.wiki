@@ -55,6 +55,7 @@ User-space часть готова. Осталось упаковать и пе�
 
 {{{
 /etc/init.d/ssh stop
+aptitude clean
 exit
 umount /DataVolume/debinst/dev
 umount /DataVolume/debinst/proc
