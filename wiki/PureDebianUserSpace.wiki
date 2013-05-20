@@ -41,12 +41,14 @@ echo deb-src http://security.debian.org/ wheezy/updates main >> /DataVolume/debi
 chroot /DataVolume/debinst
 }}}
 
-Осталось подправить в будущей системе часовой пояс и выбрать правильную locale:
+Осталось подправить в будущей системе часовой пояс, выбрать правильную locale и установить ssh, который должен будет работать сразу после установки:
 
 {{{
 aptitude install locales
 dpkg-reconfigure locales
 dpkg-reconfigure tzdata
+aptitude install ssh
+passwd
 }}}
 
 User-space часть готова. Осталось упаковать и перенести её на место назначения:
