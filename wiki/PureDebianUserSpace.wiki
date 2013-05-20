@@ -59,7 +59,7 @@ aptitude clean
 exit
 umount /DataVolume/debinst/dev
 umount /DataVolume/debinst/proc
-cd /DataVolume/debinst/dev
+cd /DataVolume/debinst
 tar -cvzf ../shares/Public/debinsts.tgz ./
 }}}
 
