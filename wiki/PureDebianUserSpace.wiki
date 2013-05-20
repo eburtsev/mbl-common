@@ -54,6 +54,7 @@ passwd
 User-space часть готова. Осталось упаковать и перенести её на место назначения:
 
 {{{
+/etc/init.d/ssh stop
 exit
 umount /DataVolume/debinst/dev
 umount /DataVolume/debinst/proc
