@@ -51,7 +51,7 @@ aptitude install ssh
 passwd
 }}}
 
-Опционально можно установить пакеты `ethtool ifplugd ifupdown module-init-tools` и изменить default runlevel в /etc/inittab, но это уже мелочи.
+Опционально можно установить пакеты `ethtool ifplugd ifupdown module-init-tools` и изменить `default runlevel` в `/etc/inittab`, но это уже мелочи.
 User-space часть готова. Осталось упаковать и перенести её на место назначения:
 
 {{{
