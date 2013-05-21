@@ -29,7 +29,7 @@ then
 	exit 0
 fi
 
-if [ -e /etc/init.d/chroot_$chroot.sh ]
+if [ -e /etc/init.d/chroot_$chrootDir.sh ]
 then
 	echo -e $ERROR Chroot\'ed services start/stop script detected! Please, remove
 	echo -e $ERROR previous installation or specify destination folder name
