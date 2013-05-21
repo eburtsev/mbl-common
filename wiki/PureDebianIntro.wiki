@@ -11,6 +11,6 @@
 
 Задача перехода на Debian Wheezy c новым ядром делится на независимые части:
 
-  * [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace создания нового ядра],
   * [http://code.google.com/p/mbl-common/wiki/PureDebianUserSpace создания user-space части],
+  * [http://code.google.com/p/mbl-common/wiki/PureDebianKernelSpace создания нового ядра],
   * [http://code.google.com/p/mbl-common/wiki/PureDebianPutTogether подготовка файловой системы для обновлённого устройства и запись user- и kernel-space частей на него].
