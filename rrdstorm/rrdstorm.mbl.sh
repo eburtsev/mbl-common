@@ -30,8 +30,10 @@
 # 5 - Disk space.
 #
 ####################################################################
-VERSION="WD My Book Live"
+VERSION="WD My Book Live (NAS)"
 DATE=$(date '+%x %R')
+IFS=$' \t\n'
+RRD_SENSORS_DATA=($(/usr/bin/wget -q -O - http://10.9.68.7/Software/rrd_sensor.txt))
 ####################################################################
 
 #-------------------------------------------------------------------
@@ -40,10 +42,9 @@ DATE=$(date '+%x %R')
 
 RRDTOOL=/usr/bin/rrdtool
 RRDUPDATE=/usr/bin/rrdupdate
-RRDDATA=/var/lib/rrd_storm
-RRDOUTPUT=/var/www/rrdstorm
+RRDDATA=/var/lib/rrd_storm_mbl
+RRDOUTPUT=/var/www/rrdstorm_mbl
 FORCEGRAPH=no
-
 #-------------------------------------------------------------------
 # data definition: Average system load
 #-------------------------------------------------------------------
@@ -60,11 +61,7 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[0]="l1:l5:l15"
 RRDuVAL[0]='
-UT=$(head -n1 /proc/loadavg)
-L1=$(echo "$UT"|awk "{print \$1}")
-L5=$(echo "$UT"|awk "{print \$2}")
-L15=$(echo "$UT"|awk "{print \$3}")
-echo "${L1}:${L5}:${L15}"
+echo "${RRD_SENSORS_DATA[0]}"
 '
 RRDgUM[0]='proc/min'
 RRDgLIST[0]="0 1 2 3 4 5"
@@ -127,13 +124,7 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[1]="cached:buffer:free:total:swapt:swapf"
 RRDuVAL[1]='
-C=$(grep ^Cached /proc/meminfo|awk "{print \$2}")
-B=$(grep ^Buffers /proc/meminfo|awk "{print \$2}")
-F=$(grep ^MemFree /proc/meminfo|awk "{print \$2}")
-T=$(grep ^MemTotal /proc/meminfo|awk "{print \$2}")
-ST=$(grep ^SwapTotal /proc/meminfo|awk "{print \$2}")
-SF=$(grep ^SwapFree /proc/meminfo|awk "{print \$2}")
-echo "${C}:${B}:${F}:${T}:${ST}:${SF}"
+echo "${RRD_SENSORS_DATA[1]}"
 '
 RRDgUM[1]='bytes'
 RRDgLIST[1]="6 7 8 9 10 11"
@@ -225,7 +216,7 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[2]="temp24"
 RRDuVAL[2]='
-/usr/sbin/smartctl --attributes /dev/sda | grep ^194 | awk "{print \$10}"
+echo "${RRD_SENSORS_DATA[2]}"
 '
 RRDgUM[2]='degrees, C'
 RRDgLIST[2]="12 13 14 15 16 17"
@@ -268,7 +259,7 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[3]="user:nice:sys:idle"
 RRDuVAL[3]='
-cat /proc/stat|head -1|sed "s/^cpu\ \+\([0-9]*\)\ \([0-9]*\)\ \([0-9]*\)\ \([0-9]*\).*/\1:\2:\3:\4/"
+echo "${RRD_SENSORS_DATA[3]}"
 '
 RRDgUM[3]='jiffies'
 RRDgLIST[3]="18 19 20 21 22 23"
@@ -341,10 +332,7 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[4]="in:out"
 RRDuVAL[4]='
-IF="eth0"
-IN=$(grep "${IF}" /proc/net/dev|awk -F ":" "{print \$2}"|awk "{print \$1}")
-OUT=$(grep "${IF}" /proc/net/dev|awk -F ":" "{print \$2}"|awk "{print \$9}")
-echo "${IN}:${OUT}"
+echo "${RRD_SENSORS_DATA[4]}"
 '
 RRDgUM[4]='bytes/s'
 RRDgLIST[4]="24 25 26 27 28 29"
@@ -406,10 +394,8 @@ RRA:AVERAGE:0.5:144:1460
 '
 RRDuSRC[5]="optprosto:optzasede:mntprosto:mntzasede"
 RRDuVAL[5]='
-SP=$(/bin/df "-B1")
-echo -n $(echo "$SP"|grep rootfs|awk "{print \$4\":\"\$3}"):
-echo -n $(echo "$SP"|grep DataVolume|awk "{print \$4\":\"\$3}")
-echo'
+echo "${RRD_SENSORS_DATA[5]}"
+'
 RRDgUM[5]='bytes'
 RRDgLIST[5]="30 31 32 33 34 35"
 RRDgDEF[5]=$(cat <<EOF
