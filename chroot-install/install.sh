@@ -52,7 +52,10 @@ rm -f /tmp/$debootstrapPkgName
 ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/wheezy
 echo -e $INFO Preparing a new Debian Wheezy chroot file base. Please, be patient,
 echo -e $INFO may takes a long time on low speed connection...
-debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude wheezy $chrootBaseDir ftp://ftp.debian.org/debian
+debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=locales,mc,aptitude wheezy $chrootBaseDir ftp://ftp.debian.org/debian
+sed -e "s/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/" -e "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" $chrootBaseDir/etc/locale.gen >$chrootBaseDir/etc/locale.gen.sed
+mv -f $chrootBaseDir/etc/locale.gen.sed $chrootBaseDir/etc/locale.gen
+chroot $chrootBaseDir locale-gen
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
 echo -e $INFO A Debian Wheezy chroot environment  installed.
 echo -e $INFO Now deploying services start script...
