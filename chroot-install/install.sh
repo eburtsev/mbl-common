@@ -12,14 +12,15 @@ then
 else
 	chrootDir=$1
 fi
+iSystem=wheezy
 chrootBaseDir=/DataVolume/$chrootDir
-debootstrapPkgName=debootstrap_1.0.10lenny1_all.deb
+debootstrapPkgName=debootstrap_1.0.48+deb7u1_all.deb
 projectURL=http://mbl-common.googlecode.com/svn/chroot-install
 isServicesInstalled=no
 wget -q -O - http://mbl-common.googlecode.com/files/downloadcounter.txt > /dev/null 2>&1
 echo -e $INFO This script will guide you through the chroot-based services
-echo -e $INFO installation on Western Digital My Book Live \(Duo\) NAS.
-echo -e $INFO The goal is to install Debian Wheezy environment with no interference
+echo -e $INFO installation on Western Digital My Book Live \(Duo\) and My Cloud NAS.
+echo -e $INFO The goal is to install Debian $iSystem environment with no interference
 echo -e $INFO with firmware. You will be asked later about which services to install
 echo -en $INPUT Do you wish to continue [y/n]?
 read userAnswer
@@ -49,15 +50,15 @@ echo -e $INFO Deploying a debootstrap package...
 wget -q -O /tmp/$debootstrapPkgName $projectURL/$debootstrapPkgName
 dpkg -i /tmp/$debootstrapPkgName > /dev/null 2>&1
 rm -f /tmp/$debootstrapPkgName
-ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/wheezy
-echo -e $INFO Preparing a new Debian Wheezy chroot file base. Please, be patient,
+#ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/$iSystem
+echo -e $INFO Preparing a new Debian $iSystem chroot file base. Please, be patient,
 echo -e $INFO may takes a long time on low speed connection...
-debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=locales,mc,aptitude wheezy $chrootBaseDir ftp://ftp.debian.org/debian
+debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=locales,mc,aptitude $iSystem $chrootBaseDir ftp://ftp.debian.org/debian
 sed -e "s/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/" -e "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" $chrootBaseDir/etc/locale.gen >$chrootBaseDir/etc/locale.gen.sed
 mv -f $chrootBaseDir/etc/locale.gen.sed $chrootBaseDir/etc/locale.gen
 chroot $chrootBaseDir locale-gen
 chroot $chrootBaseDir apt-get update > /dev/null 2>&1
-echo -e $INFO A Debian Wheezy chroot environment  installed.
+echo -e $INFO A Debian $iSystem chroot environment  installed.
 echo -e $INFO Now deploying services start script...
 wget -q -O $chrootBaseDir/chroot_$chrootDir.sh $projectURL/wedro_chroot.sh
 eval sed -i 's,__CHROOT_DIR_PLACEHOLDER__,$chrootBaseDir,g' $chrootBaseDir/chroot_$chrootDir.sh
@@ -113,7 +114,7 @@ then
 	fi
 fi
 echo -e $INFO Congratulation! Installation finished. You\'ve got a working
-echo -e $INFO Debian Wheezy environment onboard.  You may install any services
+echo -e $INFO Debian $iSystem environment onboard.  You may install any services
 echo -e $INFO you wish, but don\'t forget to add it\'s names to
 echo -e $INFO $chrootBaseDir/chroot-services.list
 echo -e $INFO /etc/init.d/chroot_$chrootDir.sh script is used
