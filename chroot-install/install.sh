@@ -53,7 +53,7 @@ rm -f /tmp/$debootstrapPkgName
 #ln -sf /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/$iSystem
 echo -e $INFO Preparing a new Debian $iSystem chroot file base. Please, be patient,
 echo -e $INFO may takes a long time on low speed connection...
-debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=locales,mc,aptitude $iSystem $chrootBaseDir ftp://ftp.debian.org/debian
+debootstrap --no-check-gpg --no-check-certificate --variant=minbase --exclude=yaboot,udev,dbus --include=locales,mc,aptitude $iSystem $chrootBaseDir ftp://ftp.debian.org/debian
 sed -e "s/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/" -e "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" $chrootBaseDir/etc/locale.gen >$chrootBaseDir/etc/locale.gen.sed
 mv -f $chrootBaseDir/etc/locale.gen.sed $chrootBaseDir/etc/locale.gen
 chroot $chrootBaseDir locale-gen
