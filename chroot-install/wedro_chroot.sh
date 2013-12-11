@@ -30,7 +30,7 @@ script_remove() {
 
 #######################################################################
 
-shareDirMountCount="$(mount | grep "$CHROOT_DIR" | wc -l)"
+shareDirMountCount="$(mount | grep "$CHROOT_DIR/" | wc -l)"
 
 check_started() {
   if [[ $shareDirMountCount -gt 0 ]]; then
