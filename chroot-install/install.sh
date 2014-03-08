@@ -67,6 +67,7 @@ touch $chrootBaseDir/chroot-services.list
 $chrootBaseDir/chroot_$chrootDir.sh install
 echo >> $chrootBaseDir/root/.bashrc
 echo PS1=\'\(chroot-$chrootDir\)\\w\# \' >> $chrootBaseDir/root/.bashrc
+$chrootBaseDir/chroot_$chrootDir.sh start
 echo -e $INFO ...finished.
 
 echo -en $INPUT Do you wish to install miniDLNA UPnP/DLNA server [y/n]?
@@ -110,6 +111,8 @@ then
 	read userAnswer
 	if [ "$userAnswer" == "y" ]
 	then
+		/etc/i nit.d/chroot_$chrootDir.sh stop
+		sleep 5
 		/etc/init.d/chroot_$chrootDir.sh start
 	fi
 fi
