@@ -111,7 +111,7 @@ then
 	read userAnswer
 	if [ "$userAnswer" == "y" ]
 	then
-		/etc/i nit.d/chroot_$chrootDir.sh stop
+		/etc/init.d/chroot_$chrootDir.sh stop
 		sleep 5
 		/etc/init.d/chroot_$chrootDir.sh start
 	fi
